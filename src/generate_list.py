@@ -3,6 +3,10 @@
 # generar con esta db un archivo csv
 # generar un markdown para una tabla
 
+import json
+from urllib.request import urlopen
+import csv
+
 from bs4 import BeautifulSoup
 
 
@@ -11,6 +15,7 @@ def clear_title(text: str):
     Clear the text title from html
     """
     return text.replace("\n", " ").replace("  ", "").strip()
+
 
 def get_list_from_file(path):
     items = []
@@ -25,17 +30,38 @@ def get_list_from_file(path):
 
     return items
 
+
 def save_json(items):
-    
+    content = "["
+    for item in items:
+        o = json.dumps(item, ensure_ascii=False)
+        content += str(o) + ","
+
+    content += "]"
+
+    with open("assets/list.json", "+w", encoding="utf-8") as file_json:
+        file_json.write(content)
+
+
+def save_cvs(items):
+    with open("assets/list.csv","+w", encoding="utf-8") as file_csv:
+        csv_writer = csv.writer(file_csv)
+        for item in items:
+            csv_writer.writerow(item)
+
+def get_imgs(url):
+    with urlopen(url) as response:
+        print(response.read())
+
 
 def main():
-    list_files = ["./assets/pedido_1.html", "./assets/pedido_2.html", "./assets/pedido_3.html", "./assets/pedido_4.html", "./assets/pedido_5.html"]
+    list_files = ["./assets/pedido_1.html", "./assets/pedido_2.html", "./assets/pedido_3.html",
+                  "./assets/pedido_4.html", "./assets/pedido_5.html"]
     content = []
     for file_html in list_files:
         content += get_list_from_file(file_html)
 
     save_json(content)
-
 
 
 if __name__ == "__main__":
