@@ -2,7 +2,6 @@ import os
 import time
 from random import randint, choice
 from urllib.request import Request, urlopen
-import urllib
 
 from bs4 import BeautifulSoup
 
