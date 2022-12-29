@@ -1,6 +1,3 @@
-# Leer la lista de archivos html
-# generar todas las lista de los articulos en un JSON Array
-# generar con esta db un archivo csv
 # generar un markdown para una tabla
 
 import csv
@@ -8,6 +5,8 @@ import hashlib
 import json
 
 from bs4 import BeautifulSoup
+
+from download_images import get_image
 
 
 def clear_title(text: str):
@@ -55,12 +54,8 @@ def save_csv(items, name_file):
         csv_writer.writerows(items)
     print(f"JSON saved in: {name_file}")
 
-def get_imgs(url):
-    # TODO:
-    pass
 
-
-def generate_list(files_path, csv_name, json_name):
+def generate_list(files_path, csv_name, json_name) -> list:
     content = []
     for file_html in files_path:
         content += get_list_from_file(file_html)
@@ -79,7 +74,10 @@ def main():
 
     # list_files = ["./assets/pedido_1.html"]
 
-    generate_list(list_files, csv_name="assets/list.csv", json_name="assets/list.json")
+    db = generate_list(list_files, csv_name="assets/list.csv", json_name="assets/list.json")
+
+    for item in db:
+        get_image(url_site=item["link"], name_file=item["hash"])
 
 
 if __name__ == "__main__":
