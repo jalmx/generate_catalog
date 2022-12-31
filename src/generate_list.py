@@ -1,13 +1,14 @@
-# generar un markdown para una tabla
+#! /usr/bin/env python3
 
 import csv
 import hashlib
 import json
+import os
 
 from bs4 import BeautifulSoup
 
 from download_images import get_image
-
+from CONTS import BASE_FOLDER_ROOT
 
 def clear_title(text: str):
     """
@@ -44,7 +45,7 @@ def save_json(items, name_file):
     with open(name_file, "+w", encoding="utf-8") as file_json:
         file_json.write(content)
 
-    print(f"CSV saved in: {name_file}")
+    print(f"JSON saved in: {name_file}")
 
 
 def save_csv(items, name_file):
@@ -52,10 +53,10 @@ def save_csv(items, name_file):
         csv_writer = csv.DictWriter(file_csv, fieldnames=[key for key in items[0]])
         csv_writer.writeheader()
         csv_writer.writerows(items)
-    print(f"JSON saved in: {name_file}")
+    print(f"CSV saved in: {name_file}")
 
 
-def generate_list(files_path, csv_name, json_name) -> list:
+def generate_list(files_path, csv_name, json_name="") -> list:
     content = []
     for file_html in files_path:
         content += get_list_from_file(file_html)
@@ -69,15 +70,23 @@ def generate_list(files_path, csv_name, json_name) -> list:
 
 
 def main():
-    list_files = ["./assets/pedido_0.html", "./assets/pedido_1.html", "./assets/pedido_2.html",
-                  "./assets/pedido_3.html", "./assets/pedido_4.html", "./assets/pedido_5.html"]
+    list_files = ["./assets/raw_list/pedido_0.html", "./assets/raw_list/pedido_1.html",
+                  "./assets/raw_list/pedido_2.html",
+                  "./assets/raw_list/pedido_3.html", "./assets/raw_list/pedido_4.html",
+                  "./assets/raw_list/pedido_5.html"]
 
-    # list_files = ["./assets/pedido_1.html"]
+    # list_files = ["./assets/pedido_1.html"] # for debug
 
-    db = generate_list(list_files, csv_name="assets/list.csv", json_name="assets/list.json")
+    os.makedirs(BASE_FOLDER_ROOT, exist_ok=True)
 
+    db = generate_list(list_files, csv_name=f"{BASE_FOLDER_ROOT}/list.csv")
+
+    # print(db)
     for item in db:
-        get_image(url_site=item["link"], name_file=item["hash"])
+        get_image(url_site=item["link"], name_folder=item["hash"])
+
+    # item = db[2]
+    # get_image(url_site=item["link"], name_folder=item["hash"])
 
 
 if __name__ == "__main__":

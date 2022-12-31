@@ -5,24 +5,28 @@ from urllib.request import Request, urlopen
 
 from bs4 import BeautifulSoup
 
+from CONTS import BASE_FOLDER_IMG
+
 
 def verify_exit(name="unnamed"):
     """
     Verify if exist the folder to save, otherwise return False
     """
-    folder_name = os.path.join("catalogo", name)
-    path_full_folder = os.path.abspath(folder_name)
-
-    if os.path.exists(path_full_folder):
-        return True
-
-    return False
+    return True if os.path.exists(name) else False
 
 
 def download_image(url: str, name="unnamed", count=0):
-    name_file = f"{name}_{count}.{url.split('.')[-1]}"
+    ext_file = url.split('.')[-1]
 
-    folder_name = os.path.join("catalogo", name)
+    name_file = name
+    if name.split(os.path.sep):
+        name_file = name.split(os.path.sep)[-1]
+
+    name_file = f"{name_file}_{count}.{ext_file}"
+
+    print("download_img", name_file)
+
+    folder_name = os.path.join(BASE_FOLDER_IMG, name)
     path_full_folder = os.path.abspath(folder_name)
     path_full_file = os.path.join(path_full_folder, name_file)
 
@@ -87,14 +91,19 @@ def sleeping():
     time.sleep(time_sleep)
 
 
-def get_image(url_site, name_file="unnamed"):
+def get_image(url_site, name_folder="unnamed"):
     """
     Function main to export
     """
 
-    if verify_exit(name=name_file):
-        print(f"Exist the folder with hash: {name_file}. Skipping")
+    name_folder = os.path.join(BASE_FOLDER_IMG, name_folder)
+    path_folder_abs = os.path.abspath(name_folder)
+
+    if verify_exit(name=path_folder_abs):
+        print(f"Exist the folder with hash: {path_folder_abs}. Skipping")
         return
+    else:
+        os.makedirs(BASE_FOLDER_IMG, exist_ok=True)
 
     header = choice(get_headers())
 
@@ -109,8 +118,9 @@ def get_image(url_site, name_file="unnamed"):
             if 0 < str(script).find('"imagePathList":'):
                 count = 1
                 for url_imgs in get_urls_image(script.text):
-                    download_image(url_imgs, name=name_file, count=count)
+                    download_image(url_imgs, name=path_folder_abs, count=count)
                     count += 1
+                    sleeping()
                 break
         sleeping()
 
