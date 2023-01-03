@@ -38,6 +38,8 @@
                 <tbody>
 
                     {% for item in data %}
+
+                    {% if item.count  %}
                      <tr>
                         <th scope="col">{{header_description}}</th>
                         <th scope="col">{{header_count}}</th>
@@ -51,18 +53,23 @@
                     <tr>
                         <td colspan="3">
                             <div style="display:flex; justify-content:space-between;">
-                                {% for code,src in item.imgs %}
-                                <img alt="{{code}}" src="{{src}}" />
+                                {% for code, src in item.imgs %}
+                                <img alt="{{code}}_{{item.description}}" src="{{src}}" />
                                 {%endfor%}
                             </div>
                         </td>
                     </tr>
+                    {% endif %}
                     {%endfor%}
-
                 </tbody>
             </table>
         </div>
     </div>
+    <footer>
+        <b>
+            List last time to generated: {{date}}
+        </b>
+    </footer>
 
 </body>
 

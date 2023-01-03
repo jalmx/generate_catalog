@@ -1,6 +1,7 @@
 import csv
 import os
 from os import path
+import datetime
 
 from jinja2 import Environment, FileSystemLoader
 
@@ -47,7 +48,7 @@ def generate_template_html(items):
 
         details.append({
             "description": item['text'],
-            "count": item['count'],
+            "count": int(item['count']),
             "price": item['amount'],
             "imgs": imgs,
             "hash": item['hash']
@@ -56,7 +57,8 @@ def generate_template_html(items):
         data = {"header_description": "Descripción del producto",
                 "header_count": "Cantidad",
                 "header_price": "Precio",
-                "data": details
+                "data": details,
+                "date": datetime.datetime.now()
                 }
 
     html = template.render(data)

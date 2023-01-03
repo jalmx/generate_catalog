@@ -73,7 +73,8 @@ def main():
     list_files = ["./assets/raw_list/pedido_0.html", "./assets/raw_list/pedido_1.html",
                   "./assets/raw_list/pedido_2.html",
                   "./assets/raw_list/pedido_3.html", "./assets/raw_list/pedido_4.html",
-                  "./assets/raw_list/pedido_5.html"]
+                  "./assets/raw_list/pedido_5.html"
+                  ]
 
     # list_files = ["./assets/pedido_1.html"] # for debug
 
