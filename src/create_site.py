@@ -48,7 +48,7 @@ def generate_template_html(items):
 
         details.append({
             "description": item['text'],
-            "count": int(item['count']),
+            "count": int(item['count']) if item['count'] else 0,
             "price": item['amount'],
             "imgs": imgs,
             "hash": item['hash']

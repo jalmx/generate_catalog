@@ -16,6 +16,9 @@ def verify_exit(name="unnamed"):
 
 
 def download_image(url: str, name="unnamed", count=0):
+    """
+    Download picture from url
+    """
     ext_file = url.split('.')[-1]
 
     name_file = name
