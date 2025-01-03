@@ -13,3 +13,5 @@ Then for generate a `pdf`, have to exec the command with the html generated in t
 ```commandline
 wkhtmltopdf catalogo.html --enable-local-file-access [name_file].pdf  
 ```
+
+> ***Note***: `wkhtmltopdf` is **deprecated**
