@@ -162,4 +162,5 @@ cython_debug/
 *.jpg
 *.json
 *.csv
-catalogo/
+catalogo/*
+raw_list

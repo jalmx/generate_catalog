@@ -19,7 +19,7 @@ def download_image(url: str, name="unnamed", count=0):
     """
     Download picture from url
     """
-    ext_file = url.split('.')[-1]
+    ext_file = url.split(".")[-1]
 
     name_file = name
     if name.split(os.path.sep):
@@ -40,11 +40,13 @@ def download_image(url: str, name="unnamed", count=0):
 
     header = choice(get_headers())
     request = Request(url, headers=header)
-
-    with open(path_full_file, "wb+") as picture:
-        with urlopen(request) as response:
-            picture.write(response.read())
-            print(f"Image saved: {path_full_file}")
+    try:
+        with open(path_full_file, "wb+") as picture:
+            with urlopen(request) as response:
+                picture.write(response.read())
+                print(f"Image saved: {path_full_file}")
+    except Exception as e:
+        print(f"Fail to download: {request}")
 
 
 def get_urls_image(html) -> list[str]:
@@ -61,10 +63,10 @@ def get_headers():
     https://www.useragents.me/
     """
     headers = [  # 'Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101 Firefox/91.0',
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36",
         "Mozilla/5.0 (Windows NT 10.0; rv:78.0) Gecko/20100101 Firefox/78.0",
         "Mozilla/5.0 (X11; Linux x86_64; rv:95.0) Gecko/20100101 Firefox/95.0",
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36',
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36",
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,like Gecko) Chrome/105.0.0.0 Safari/537.36",
         "Mozilla/5.0 (Linux; Android 12; SM-S906N Build/QP1A.190711.020; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/80.0.3987.119 Mobile Safari/537.36",
         "Mozilla/5.0 (Linux; Android 8.0.0; Pixel 2 Build/OPD1.170811.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/59.0.3071.125 Mobile Safari/537.36",
@@ -75,15 +77,13 @@ def get_headers():
         "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.2 Safari/605.1.15",
         "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36",
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 YaBrowser/22.11.5.715 Yowser/2.5 Safari/537.36",
-        "Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0"
+        "Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101 Firefox/102.0",
     ]
 
     user_agents = []
 
     for header in headers:
-        user_agents.append({
-            'User-Agent': header
-        })
+        user_agents.append({"User-Agent": header})
 
     return user_agents
 
