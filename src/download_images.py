@@ -1,5 +1,6 @@
 import os
 import time
+import csv
 from random import randint, choice
 from urllib.request import Request, urlopen
 
@@ -53,7 +54,9 @@ def get_urls_image(html) -> list[str]:
     """
     Clear all string to retrieve the list of url for download picture
     """
-    line = html.split("imagePathList")[1][2:].split(',"name":"ImageModule"')
+    # line = html.split("imagePathList")[1][2:].split(',"name":"ImageModule"')
+    line = html.split("imagePathList")[1][2:].split(',"name":"')
+    print("line:", line)
     return line[0].replace("[", "").replace("]", "").replace('"', "").split(",")
 
 
@@ -143,5 +146,13 @@ def main():
         get_image(url, str(randint(0, 1000)))
 
 
+def download_images_from_file(file_path):
+    with open(file_path, "r") as file:
+        csv_reader = csv.DictReader(file)
+        for row in csv_reader:
+            print(row["link"])
+            get_image(row["link"], row["hash"])
+
 if __name__ == "__main__":
-    main()
+    #main()
+    download_images_from_file("./components.csv")
