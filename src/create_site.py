@@ -5,12 +5,20 @@ import datetime
 
 from jinja2 import Environment, FileSystemLoader
 
-from CONTS import BASE_FOLDER_TEMPLATE, BASE_FOLDER_IMG, NAME_TEMPLATE_HTML, BASE_FOLDER_ROOT, NAME_HTML_SAVE
+from CONTS import (
+    BASE_FOLDER_TEMPLATE,
+    BASE_FOLDER_IMG,
+    NAME_TEMPLATE_HTML,
+    BASE_FOLDER_ROOT,
+    NAME_HTML_SAVE,
+)
 
 
 def generate_pdf():
-    os.system(f" wkhtmltopdf {os.path.join(BASE_FOLDER_ROOT, NAME_HTML_SAVE)} --enable-local-file-access "
-              f"{os.path.join(BASE_FOLDER_ROOT, 'catalogo.pdf')}    ")
+    os.system(
+        f" wkhtmltopdf {os.path.join(BASE_FOLDER_ROOT, NAME_HTML_SAVE)} --enable-local-file-access "
+        f"{os.path.join(BASE_FOLDER_ROOT, 'catalogo.pdf')}    "
+    )
 
 
 def save_html(path_html, content):
@@ -20,10 +28,19 @@ def save_html(path_html, content):
 
 
 def read_db():
-    path_db = os.path.join(BASE_FOLDER_ROOT, "list.csv")
-    with open(path_db, "r", encoding="utf-8") as db:
-        file_csv = csv.DictReader(db)
-        return list(file_csv)
+    list_list_items = []
+    list_items = os.listdir(BASE_FOLDER_ROOT)
+
+    for item in list_items:
+        if item.endswith(".csv"):
+            list_list_items.append(item)
+            print(f"Found: {item}")
+
+    for list_item in list_list_items:
+        path_db = os.path.join(BASE_FOLDER_ROOT, list_item)
+        with open(path_db, "r", encoding="utf-8") as db:
+            file_csv = csv.DictReader(db)
+            return list(file_csv)
 
 
 def read_imagens(path_folder) -> list:
@@ -42,30 +59,34 @@ def generate_template_html(items):
     for item in items:
         imgs = []
 
-        for link in read_imagens(path.join(path_imgs, item['hash'])):
+        for link in read_imagens(path.join(path_imgs, item["hash"])):
             src = f"{path.join('img', item['hash'], link)}"
-            imgs.append((item['hash'], src))
+            imgs.append((item["hash"], src))
 
-        details.append({
-            "description": item['text'],
-            "count": int(item['count']) if item['count'] else 0,
-            "price": item['amount'],
-            "imgs": imgs,
-            "hash": item['hash']
-        })
+        details.append(
+            {
+                "description": item["text"],
+                "count": int(item["count"]) if item["count"] else 0,
+                "price": item["amount"],
+                "imgs": imgs,
+                "hash": item["hash"],
+            }
+        )
 
-        data = {"header_description": "Descripción del producto",
-                "header_count": "Cantidad",
-                "header_price": "Precio",
-                "data": details,
-                "date": datetime.datetime.now()
-                }
+        data = {
+            "header_description": "Descripción del producto",
+            "header_count": "Stock",
+            "header_price": "Precio",
+            "data": details,
+            "date": datetime.datetime.now(),
+        }
 
     html = template.render(data)
     save_html(os.path.join(BASE_FOLDER_ROOT, NAME_HTML_SAVE), html)
 
 
 def main():
+    # for testing
     path_template = "/home/xizuth/Projects/generate_catalog/src/catalogo/"
     env = Environment(loader=FileSystemLoader(path_template))
     template = env.get_or_select_template("template.jinja-html")
@@ -74,7 +95,8 @@ def main():
     links = [
         "file:///home/xizuth/Projects/generate_catalog/src/catalogo/img/1cc7277ac38665553f1f4b428c25a4b6/a1cc7277ac38665553f1f4b428c25a4b6_1.jpg",
         "file:///home/xizuth/Projects/generate_catalog/src/catalogo/img/1cc7277ac38665553f1f4b428c25a4b6/a1cc7277ac38665553f1f4b428c25a4b6_2.jpg",
-        "file:///home/xizuth/Projects/generate_catalog/src/catalogo/img/1cc7277ac38665553f1f4b428c25a4b6/a1cc7277ac38665553f1f4b428c25a4b6_3.jpg"]
+        "file:///home/xizuth/Projects/generate_catalog/src/catalogo/img/1cc7277ac38665553f1f4b428c25a4b6/a1cc7277ac38665553f1f4b428c25a4b6_3.jpg",
+    ]
     imgs = []
     amount = 23.82
     count = 10
@@ -87,20 +109,10 @@ def main():
         "header_description": "Descripcion del producto",
         "header_count": "Cantidad",
         "header_price": "Precio",
-        "data": [{
-            "description": text,
-            "count": count,
-            "price": amount,
-            "imgs": imgs
-        },
-            {
-                "description": text,
-                "count": 2,
-                "price": 2.2,
-                "imgs": imgs
-            },
-        ]
-
+        "data": [
+            {"description": text, "count": count, "price": amount, "imgs": imgs},
+            {"description": text, "count": 2, "price": 2.2, "imgs": imgs},
+        ],
     }
 
     html = template.render(data)

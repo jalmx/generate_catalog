@@ -14,25 +14,9 @@ from CONTS import BASE_FOLDER_ROOT
 
 def clear_title(text: str):
     """
-    Clear the text title from html
+    Clear the text title from HTML
     """
     return text.replace("\n", " ").replace("  ", "").strip()
-
-
-# def get_list_from_file(path):
-#     items = []
-#     with open(path) as file_html:
-#         html = BeautifulSoup(file_html, "html.parser")
-#         content_main = html.find_all("div", "order-detail-item")[0]
-
-#         for div_item in content_main.find_all("div", class_="order-detail-item-content-wrap"):
-#             text = clear_title(div_item.find("div", class_="item-title").find("a").text)
-#             link = div_item.find("div", class_="item-title").find("a")["href"]
-#             amount, count = div_item.find("div", class_="item-price").text[4:].split("x")
-#             hash = hashlib.md5(text.encode()).hexdigest()
-
-#             items.append({"text": text, "link": link, "amount": float(amount), "count": int(count), "hash": hash})
-#     return items
 
 
 def get_price(amount: str):
@@ -175,11 +159,20 @@ def main():
     #               "./assets/raw_list/pedido_5.html"
     #               ]
 
-    list_files = ["src/assets/raw_list/pedido_lcd.html"]  # for debug
+    list_files = []  # for debug
+
+    path_base = "assets/raw_list"
+    full_path = os.path.join(os.getcwd(), path_base)
+
+    for site in os.listdir(full_path):
+        full_path_site = os.path.join(full_path, site)
+        list_files.append(full_path_site)
 
     os.makedirs(BASE_FOLDER_ROOT, exist_ok=True)
 
-    db = generate_list(list_files, csv_name=f"{BASE_FOLDER_ROOT}/list{datetime.now()}.csv")
+    db = generate_list(
+        list_files, csv_name=f"{BASE_FOLDER_ROOT}/list{datetime.now()}.csv"
+    )
 
     # download imagen
     for item in db:
