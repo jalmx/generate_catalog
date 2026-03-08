@@ -8,7 +8,7 @@ from datetime import datetime
 
 from bs4 import BeautifulSoup
 
-from download_images import get_image
+from util.download_images import get_image
 from CONTS import BASE_FOLDER_ROOT
 
 
@@ -21,6 +21,7 @@ def clear_title(text: str):
 
 def get_price(amount: str):
     value = 0.0
+    amount = amount.strip()
     if amount.find("MX") != -1:
         value = amount.replace("MX$", "")
     else:
@@ -180,7 +181,6 @@ def main():
 
     # item = db[2]
     # get_image(url_site=item["link"], name_folder=item["hash"])
-
 
 if __name__ == "__main__":
     main()

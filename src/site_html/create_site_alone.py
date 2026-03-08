@@ -87,7 +87,7 @@ def generate_template_html(items):
 
 def main():
     # for testing
-    path_template = "/home/xizuth/Projects/generate_catalog/src/catalogo/"
+    path_template = "/src/catalogo/"
     env = Environment(loader=FileSystemLoader(path_template))
     template = env.get_or_select_template("template.jinja-html")
 
